@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
-import { user, registerUser } from "../repository/signup.repository.js"
+import { registerUser, user } from "../repository/signup.repository.js"
 
 export async function signUp(req, res) {
     const { name, email, password } = res.locals;
@@ -14,14 +14,14 @@ export async function signUp(req, res) {
     }
 }
 
-export async function signIn(req, res) {
-    const { email, password } = req.body;
-    const token = uuid();
+ export async function signIn(req, res) {
+     const { email, password } = req.body;
+     const token = uuid();
 
-    try {
-        await user(email, password)
-        return res.status(201).send(token);
-    } catch (err) {
-        return res.status(500).send(err.message);
-    }
-}
+     try {
+         await user(email, password)
+         return res.status(201).send(token);
+     } catch (err) {
+         return res.status(500).send(err.message);
+     }
+ }
