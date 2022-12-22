@@ -10,8 +10,6 @@ export async function validateLinks(req, res, next) {
     const token = authorization?.replace("Bearer ", "");
     const { error } = urlSchema.validate({ url }, { abortEarly: false });
 
-    console.log(req.body)
-
     if (!token) {
         return res.status(401).send("Token error");
     }

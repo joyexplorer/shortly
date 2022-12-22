@@ -33,6 +33,7 @@ export async function signIn(req, res) {
         return res.status(500).send(err.message);
     }
 }
+
 export async function getLinks(req, res) {
     const userId = res.locals
 

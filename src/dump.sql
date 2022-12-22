@@ -2,7 +2,7 @@ CREATE TABLE "links" (
 	"id" serial NOT NULL,
 	"url" TEXT NOT NULL,
 	"shortUrl" TEXT NOT NULL UNIQUE,
-	"visitCount" bigint NOT NULL UNIQUE DEFAULT '0',
+	"visitCount" bigint NOT NULL DEFAULT '0',
 	"userId" int NOT NULL,
 	"createdAt" TIMESTAMP NOT NULL DEFAULT 'NOW()',
 	CONSTRAINT "links_pk" PRIMARY KEY ("id")
