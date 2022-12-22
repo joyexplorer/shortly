@@ -21,7 +21,7 @@ CREATE TABLE "sessions" (
 	"id" serial NOT NULL,
 	"name" TEXT NOT NULL,
 	"token" TEXT NOT NULL,
-	"userid" INTEGER NOT NULL REFERENCES "users"("id")
+	"userId" INTEGER NOT NULL REFERENCES "users"("id")
 );
 
 ALTER TABLE "links" ADD CONSTRAINT "links_fk0" FOREIGN KEY ("userId") REFERENCES "users"("id");
