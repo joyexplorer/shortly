@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid'
-import { urlShort, getUrl } from '../repository/links.repository.js';
+import { urlShort, getUrls, visitCount, getShortUrls } from '../repository/links.repository.js';
 
 export async function urlShorten(req, res) {
     const { url, userId } = res.locals;
@@ -17,7 +17,7 @@ export async function urlList(req, res) {
     const { id } = req.params;
 
     try {
-        const urlGet = await getUrl(id)
+        const urlGet = await getUrls(id)
         if (urlGet.rowCount > 0) {
             const url = {
                 id: urlGet.rows[0].id,
@@ -31,4 +31,24 @@ export async function urlList(req, res) {
     } catch (err) {
         return res.status(500).send(err.message);
     }
+}
+
+export async function openUrl(req, res) {
+    const { shortUrl } = req.params;
+
+    try{
+        const findUrl = await getShortUrls(id)
+
+        if(findUrl.rowCount > 0){
+            const url =`localhost:4000/${findUrl.rows[0].shortUrl} `
+            const id = findUrl.rows[0].id
+            await visitCount(id)
+            return res.redirect(url);
+          } else{
+            return res.sendStatus(404)
+          }
+
+    }catch (err) {
+      return res.status(500).send(err.message);
+    } 
 }

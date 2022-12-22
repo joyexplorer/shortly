@@ -17,15 +17,14 @@ export async function signUp(req, res) {
 }
 
 export async function signIn(req, res) {
-    const { email, password, name, id } = res.locals;
-    const secret = process.env.JWT_SECRET
+    const { email, password, name, id } = res.locals; 
 
     const payload = {
         username: name,
         userId: id
     }
 
-    const jwtToken = jwt.sign(payload, secret)
+    const jwtToken = jwt.sign(payload, process.env.JWT_SECRET)
 
     try {
         await user(email, password)

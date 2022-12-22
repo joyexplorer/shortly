@@ -8,7 +8,8 @@ export async function validateLinks(req, res, next) {
     const { authorization } = req.headers;
     const token = authorization?.replace("Bearer ", "");
     const { error } = urlSchema.validate({ url }, { abortEarly: false });
-    const secret = process.env.JWT_SECRET
+
+    console.log(req.body)
 
     if (!token) {
         return res.status(401).send("Token error");
@@ -19,7 +20,7 @@ export async function validateLinks(req, res, next) {
         return res.status(422).send(errors);
     }
 
-    const code = jwt.verify(token, secret);
+    const code = jwt.verify(token, process.env.JWT_SECRET);
     if (!code) {
         return res.status(401).send("Invalid token");
     }
