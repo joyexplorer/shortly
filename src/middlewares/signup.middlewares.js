@@ -14,7 +14,7 @@ export async function validateUser(req, res, next) {
 
     const Ifemail = await validateEmail(email)
 
-    if (Ifemail.rowCount > 0) {
+    if (Ifemail) {
         return res.status(409).send("Este email já existe!")
     }
     res.locals = users;
@@ -24,6 +24,7 @@ export async function validateUser(req, res, next) {
 export async function validateLogin(req, res, next) {
     const { email, password } = req.body;
     const { error } = userSchema.validate(req.body, { abortEarly: false });
+    let infoLogin;
 
     if (error) {
         const errors = error.details.map((detail) => detail.message);
@@ -33,14 +34,26 @@ export async function validateLogin(req, res, next) {
     const Ifemail = await validateEmail(email)
     const passwordConfirmed = bcrypt.compareSync(password, Ifemail.rows[0].password);
 
-    if (Ifemail.rowCount === 0) {
-        return res.sendStatus(401)
+    if (!passwordConfirmed || "") {
+        return res.status(401).send("E-mail ou Senha inválido.");
     }
 
-    if (!passwordConfirmed) {
-        return res.sendStatus(401);
-    }
+    if(Ifemail.rowCount > 0 && passwordConfirmed){
+        infoLogin = {
+          email: email,
+          password: passwordConfirmed,
+          name: Ifemail.rows[0].name,
+          id: Ifemail.rows[0].id
+        }
+      }
+    // const dbUser = await findUserByEmail(user.email);
+    // if (!bcrypt.compareSync(user.password, dbUser?.password || "")) {
+    //   return res.status(401).send("E-mail ou Senha inválido.");
+    // }
+    // if (!passwordConfirmed) {
+    //     return res.sendStatus(401);
+    // }
 
-    res.locals = req.body;
+    res.locals = infoLogin;
     next();
 }

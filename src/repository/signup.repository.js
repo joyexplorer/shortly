@@ -11,8 +11,16 @@ export function registerUser(name, email, hashedPassword) {
     );
 }
 
- export function user(email, password) {
-     return connection.query(
-         "SELECT * FROM users WHERE email=$1 AND password=$2", [email, password]
-     );
+export function user(email, password) {
+    return connection.query(
+        "SELECT * FROM users WHERE email=$1 AND password=$2", [email, password]
+    );
+}
+
+export function sessions(name, token, id) {
+    return connection.query(
+        `INSERT INTO sessions (name, token, "userid") 
+      VALUES ($1, $2, $3);`,
+        [name, token, id]
+    );
 }
