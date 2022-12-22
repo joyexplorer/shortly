@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid'
-import { urlShort, getUrls, visitCount, getShortUrls } from '../repository/links.repository.js';
+import { urlShort, getUrls, visitCount, getShortUrls, deleteUrl } from '../repository/links.repository.js';
 
 export async function urlShorten(req, res) {
     const { url, userId } = res.locals;
@@ -51,4 +51,15 @@ export async function openUrl(req, res) {
     }catch (err) {
       return res.status(500).send(err.message);
     } 
+}
+
+export async function deleteUrls(req, res){
+    const id = res.locals
+
+    try {
+        await deleteUrl(id)
+        return res.sendStatus(204)
+      } catch (err) {
+        return res.status(500).send(err.message);
+      } 
 }
