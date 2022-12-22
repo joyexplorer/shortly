@@ -38,15 +38,15 @@ export async function getLinks(req, res) {
     const userId = res.locals
 
     try {
-        const visit = await visitCount()
-        const visited = visit.rows[0].visit
+        const visit = await visitCount(userId)
+        const visited = visit.rows
         const links = await linkGet(userId)
         const dataLink = links.rows
 
         const response = {
             id: dataLink[0].id,
             name: dataLink[0].name,
-            visitCount: visited,
+            visitCount: visited[0].visitCount,
             shortenedUrls: dataLink.map((row) => ({
                 id: row.linkId,
                 shortUrl: row.shortUrl,
