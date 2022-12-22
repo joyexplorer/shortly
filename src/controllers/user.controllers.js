@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
-import { registerUser, user } from "../repository/user.repository.js";
+import { registerUser, user, validateUserGet, linkGet, visitCount } from "../repository/user.repository.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -17,7 +17,7 @@ export async function signUp(req, res) {
 }
 
 export async function signIn(req, res) {
-    const { email, password, name, id } = res.locals; 
+    const { email, password, name, id } = res.locals;
 
     const payload = {
         username: name,
@@ -29,6 +29,32 @@ export async function signIn(req, res) {
     try {
         await user(email, password)
         return res.status(201).send(jwtToken);
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+}
+export async function getLinks(req, res) {
+    const userId = res.locals
+
+    try {
+        const visit = await visitCount()
+        const visited = visit.rows[0].visit
+        const links = await linkGet(userId)
+        const dataLink = links.rows
+
+        const response = {
+            id: dataLink[0].id,
+            name: dataLink[0].name,
+            visitCount: visited,
+            shortenedUrls: dataLink.map((row) => ({
+                id: row.linkId,
+                shortUrl: row.shortUrl,
+                url: row.url,
+                visitCount: row.visitCount,
+            })),
+        };
+
+        return res.status(200).send(response);
     } catch (err) {
         return res.status(500).send(err.message);
     }

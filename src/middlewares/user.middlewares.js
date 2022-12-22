@@ -1,6 +1,9 @@
 import bcrypt from "bcrypt";
 import { newUserSchema, userSchema } from "../models/user.models.js"
-import { selectEmail } from "../repository/user.repository.js";
+import { selectEmail, validateUserGet } from "../repository/user.repository.js";
+import jwt from 'jsonwebtoken';
+import dotenv from "dotenv";
+dotenv.config();
 
 export async function validateUser(req, res, next) {
     const { email } = req.body;
@@ -47,6 +50,30 @@ export async function validateLogin(req, res, next) {
       }
 
     res.locals = infoLogin;
+
+    next();
+}
+
+export async function validateHeader(req, res, next){
+    const { authorization } = req.headers;
+    const token = authorization?.replace('Bearer ', '');
+
+    if (!token) {
+        return res.status(401).send("Token error");
+    }
+    const code = jwt.verify(token, process.env.JWT_SECRET);
+    if (!code) {
+        return res.sendStatus(401)
+    }
+
+    const userId = code.userId
+    const ifUser = validateUserGet(userId)
+
+    if(ifUser.rowCount < 1){
+      return res.sendStatus(404)
+    }
+
+    res.locals = userId;
 
     next();
 }
