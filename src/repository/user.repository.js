@@ -1,6 +1,6 @@
 import { connection } from "../database/database.js"
 
-export function validateEmail(email) {
+export function selectEmail(email) {
     return connection.query("SELECT * FROM users WHERE email=$1", [email]);
 }
 

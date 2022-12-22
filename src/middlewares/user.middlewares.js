@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { newUserSchema, userSchema } from "../models/user.models.js"
-import { validateEmail } from "../repository/user.repository.js";
+import { selectEmail } from "../repository/user.repository.js";
 
 export async function validateUser(req, res, next) {
     const { email } = req.body;
@@ -12,7 +12,7 @@ export async function validateUser(req, res, next) {
         return res.status(422).send(errors);
     }
 
-    const Ifemail = await validateEmail(email)
+    const Ifemail = await selectEmail(email)
 
     if (Ifemail) {
         return res.status(409).send("Este email já existe!")
@@ -31,13 +31,12 @@ export async function validateLogin(req, res, next) {
         return res.status(422).send(errors);
     }
 
-    const Ifemail = await validateEmail(email)
-    const passwordConfirmed = bcrypt.compareSync(password, Ifemail.rows[0].password);
+    const Ifemail = await selectEmail(email)
 
-    if (!passwordConfirmed || "") {
+    if (Ifemail.rowCount === 0 || !bcrypt.compareSync(password, Ifemail.rows[0].password) || "") {
         return res.status(401).send("E-mail ou Senha inválido.");
     }
-
+    const passwordConfirmed = bcrypt.compareSync(password, Ifemail.rows[0].password)
     if(Ifemail.rowCount > 0 && passwordConfirmed){
         infoLogin = {
           email: email,

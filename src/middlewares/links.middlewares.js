@@ -1,5 +1,5 @@
 import { urlSchema } from "../models/links.models.js";
-import { tokenGet, tokenJoin, getUrls } from "../repository/links.repository.js"
+import { getUrls } from "../repository/links.repository.js"
 import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
 dotenv.config();
@@ -26,11 +26,6 @@ export async function validateLinks(req, res, next) {
         return res.status(401).send("Invalid token");
     }
 
-    const sessionToken = await tokenGet(token);
-    if (sessionToken.rowCount < 1) {
-        return res.sendStatus(401);
-    }
-
     const sessionData = {
         url: url,
         userId: code.userId
@@ -53,10 +48,14 @@ export async function validateUrl(req, res, next) {
     if (getUrl.rowCount < 1) {
         return res.sendStatus(404)
     }
-    const url = await tokenJoin(token, id);
-    if (url.rowCount < 1) {
+    const code = jwt.verify(token, process.env.JWT_SECRET);
+    if (!code) {
         return res.sendStatus(401)
     }
+
+    if(getUrl.rows[0].userId !== code.userId){
+        return res.sendStatus(401)
+      }
 
     res.locals = id;
 
