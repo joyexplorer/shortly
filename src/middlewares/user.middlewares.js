@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
-import { newUserSchema, userSchema } from "../models/signup.models.js"
-import { validateEmail } from "../repository/signup.repository.js";
+import { newUserSchema, userSchema } from "../models/user.models.js"
+import { validateEmail } from "../repository/user.repository.js";
 
 export async function validateUser(req, res, next) {
     const { email } = req.body;
