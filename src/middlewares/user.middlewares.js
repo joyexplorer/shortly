@@ -46,14 +46,8 @@ export async function validateLogin(req, res, next) {
           id: Ifemail.rows[0].id
         }
       }
-    // const dbUser = await findUserByEmail(user.email);
-    // if (!bcrypt.compareSync(user.password, dbUser?.password || "")) {
-    //   return res.status(401).send("E-mail ou Senha inválido.");
-    // }
-    // if (!passwordConfirmed) {
-    //     return res.sendStatus(401);
-    // }
 
     res.locals = infoLogin;
+
     next();
 }

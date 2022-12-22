@@ -26,7 +26,7 @@ export async function validateLinks(req, res, next) {
 
     const sessionData = {
         url: url,
-        userId: decoded.userId
+        userId: code.userId
     }
 
     res.locals = sessionData;
