@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import users from "./routes/signup.routes.js"
+import users from "./routes/users.routes.js"
 import links from "./routes/links.routes.js"
 import ranking from "./routes/ranking.routes.js"
 
