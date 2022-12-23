@@ -24,7 +24,7 @@ export async function urlList(req, res) {
                 shortUrl: urlGet.rows[0].shortUrl,
                 url: urlGet.rows[0].url
             }
-            return res.status(201).send(url);
+            return res.status(200).send(url);
         } else {
             return res.sendStatus(404)
         }
@@ -36,30 +36,30 @@ export async function urlList(req, res) {
 export async function openUrl(req, res) {
     const { shortUrl } = req.params;
 
-    try{
-        const findUrl = await getShortUrls(id)
+    try {
+        const findUrl = await getShortUrls(shortUrl)
 
-        if(findUrl.rowCount > 0){
-            const url =`localhost:4000/${findUrl.rows[0].shortUrl} `
+        if (findUrl.rowCount > 0) {
+            const url = `localhost:4000/${findUrl.rows[0].shortUrl} `
             const id = findUrl.rows[0].id
             await visitCount(id)
             return res.redirect(url);
-          } else{
+        } else {
             return res.sendStatus(404)
-          }
+        }
 
-    }catch (err) {
-      return res.status(500).send(err.message);
-    } 
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
 }
 
-export async function deleteUrls(req, res){
+export async function deleteUrls(req, res) {
     const id = res.locals
 
     try {
         await deleteUrl(id)
         return res.sendStatus(204)
-      } catch (err) {
+    } catch (err) {
         return res.status(500).send(err.message);
-      } 
+    }
 }

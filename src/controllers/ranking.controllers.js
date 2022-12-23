@@ -9,10 +9,10 @@ export async function getRanking(req, res) {
             id: row.id,
             name: row.name,
             linksCount: row.linksCount,
-            visitCount: row.visitCount === null ? "0" : row.visitCount
-          }))
-    
-          return res.status(200).send(response);
+            visitCount: row.visitCount
+        }))
+
+        return res.status(200).send(rankingResponse);
     } catch (err) {
         return res.status(500).send(err.message);
     }

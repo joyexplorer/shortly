@@ -28,14 +28,14 @@ export async function signIn(req, res) {
 
     try {
         await user(email, password)
-        return res.status(201).send(jwtToken);
+        return res.status(200).send(jwtToken);
     } catch (err) {
         return res.status(500).send(err.message);
     }
 }
 
 export async function getLinks(req, res) {
-    const userId = res.locals
+    const {userId} = res.locals
 
     try {
         const visit = await visitCount(userId)

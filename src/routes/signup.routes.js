@@ -6,6 +6,6 @@ const router = Router();
 
 router.post("/signup", validateUser, signUp)
 router.post("/signin", validateLogin, signIn)
-router.get("/users/me", getLinks, validateHeader)
+router.get("/users/me", validateHeader,getLinks)
 
 export default router

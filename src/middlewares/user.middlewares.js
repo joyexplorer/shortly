@@ -17,9 +17,9 @@ export async function validateUser(req, res, next) {
 
     const Ifemail = await selectEmail(email)
 
-    if (Ifemail) {
-        return res.status(409).send("Este email já existe!")
-    }
+    if(Ifemail.rowCount > 0){
+        return res.status(409).send("Email já cadastrado!")
+      }
     res.locals = users;
     next();
 }
@@ -40,21 +40,21 @@ export async function validateLogin(req, res, next) {
         return res.status(401).send("E-mail ou Senha inválido.");
     }
     const passwordConfirmed = bcrypt.compareSync(password, Ifemail.rows[0].password)
-    if(Ifemail.rowCount > 0 && passwordConfirmed){
+    if (Ifemail.rowCount > 0 && passwordConfirmed) {
         infoLogin = {
-          email: email,
-          password: passwordConfirmed,
-          name: Ifemail.rows[0].name,
-          id: Ifemail.rows[0].id
+            email: email,
+            password: passwordConfirmed,
+            name: Ifemail.rows[0].name,
+            id: Ifemail.rows[0].id
         }
-      }
+    }
 
     res.locals = infoLogin;
 
     next();
 }
 
-export async function validateHeader(req, res, next){
+export async function validateHeader(req, res, next) {
     const { authorization } = req.headers;
     const token = authorization?.replace('Bearer ', '');
 
@@ -69,11 +69,11 @@ export async function validateHeader(req, res, next){
     const userId = code.userId
     const ifUser = validateUserGet(userId)
 
-    if(ifUser.rowCount < 1){
-      return res.sendStatus(404)
+    if (ifUser.rowCount < 1) {
+        return res.sendStatus(404)
     }
 
-    res.locals = userId;
+    res.locals.userId = userId;
 
     next();
 }

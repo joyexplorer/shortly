@@ -19,6 +19,6 @@ export function visitCount(id) {
     return connection.query('UPDATE links SET "visitCount"= ("visitCount" + 1) WHERE id=$1', [id]);
 }
 
-export function deleteUrl(id){
+export function deleteUrl(id) {
     return connection.query('DELETE FROM links WHERE id=$1', [id]);
 }
